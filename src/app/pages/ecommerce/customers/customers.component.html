@@ -1,0 +1,524 @@
+<!-- Start Breadcrumbs -->
+<app-breadcrumbs
+  title="Customers"
+  [breadcrumbItems]="breadCrumbItems"
+></app-breadcrumbs>
+<!-- End Breadcrumbs -->
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card" id="customerList">
+      <div class="card-header border-bottom-dashed">
+        <div class="row g-4 align-items-center">
+          <div class="col-sm">
+            <div>
+              <h5 class="card-title mb-0">Customer List</h5>
+            </div>
+
+            <button class="btn btn-danger" (click)="confirm(deleteModel, '')">
+              Click
+            </button>
+          </div>
+          <div class="col-sm-auto">
+            <div class="d-flex flex-wrap align-items-start gap-2">
+              <button
+                class="btn btn-soft-danger"
+                id="remove-actions"
+                style="display: none"
+                (click)="deleteMultiple(deleteModel)"
+              >
+                <i class="ri-delete-bin-2-line"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-success add-btn"
+                data-bs-toggle="modal"
+                id="create-btn"
+                data-bs-target="#showModal"
+                (click)="openModal(content)"
+              >
+                <i class="ri-add-line align-bottom me-1"></i> Add Customer
+              </button>
+              <button
+                type="button"
+                class="btn btn-info"
+                (click)="csvFileExport()"
+              >
+                <i class="ri-file-download-line align-bottom me-1"></i> Export
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body border-bottom-dashed border-bottom">
+        <div class="row g-3">
+          <div class="col-xl-6">
+            <div class="search-box">
+              <input
+                type="text"
+                name="searchTerm"
+                class="form-control"
+                placeholder="Search for customer, email, phone, status or something..."
+                [(ngModel)]="service.searchTerm"
+              />
+              <i class="ri-search-line search-icon"></i>
+            </div>
+          </div>
+          <!--end col-->
+          <div class="col-xl-6">
+            <div class="row g-3">
+              <div class="col-sm-4">
+                <div class="">
+                  <input
+                    class="form-control flatpickr-input"
+                    type="text"
+                    mwlFlatpickr
+                    [altInput]="true"
+                    [convertModelValue]="true"
+                    placeholder="Select date"
+                    id="isDate"
+                    [(ngModel)]="service.date"
+                  />
+                </div>
+              </div>
+              <!--end col-->
+              <div class="col-sm-4">
+                <div>
+                  <select
+                    class="form-control"
+                    data-plugin="choices"
+                    data-choices
+                    data-choices-search-false
+                    name="choices-single-default"
+                    id="idStatus"
+                    [(ngModel)]="service.status"
+                  >
+                    <option value="" selected>Select Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Block">Block</option>
+                  </select>
+                </div>
+              </div>
+              <!--end col-->
+
+              <div class="col-sm-4">
+                <div>
+                  <button type="button" class="btn btn-primary w-100">
+                    <i class="ri-equalizer-fill me-2 align-bottom"></i>Filters
+                  </button>
+                </div>
+              </div>
+              <!--end col-->
+            </div>
+          </div>
+        </div>
+        <!--end row-->
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="table-responsive table-card mb-1">
+            <table class="table">
+              <thead class="table-light text-muted">
+                <tr>
+                  <th scope="col" style="width: 50px">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="checkAll"
+                        value="option"
+                        [(ngModel)]="masterSelected"
+                        (change)="checkUncheckAll($event)"
+                      />
+                    </div>
+                  </th>
+                  <th class="sort" data-sort="customer_name">Customer</th>
+                  <th class="sort" data-sort="email">Email</th>
+                  <th class="sort" data-sort="phone">Phone</th>
+                  <th class="sort" data-sort="date">Joining Date</th>
+                  <th class="sort" data-sort="status">Status</th>
+                  <th class="sort" data-sort="action">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of customers" id="c_{{ data._id }}">
+                  <th scope="row">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="checkAll"
+                        value="{{ data._id }}"
+                        [(ngModel)]="data.state"
+                        (change)="onCheckboxChange($event)"
+                      />
+                    </div>
+                  </th>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.customer"
+                      [term]="service.searchTerm"
+                    >
+                    </ngb-highlight>
+                  </td>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.email"
+                      [term]="service.searchTerm"
+                    >
+                    </ngb-highlight>
+                  </td>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.phone"
+                      [term]="service.searchTerm"
+                    >
+                    </ngb-highlight>
+                  </td>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.date | date : 'longDate'"
+                      [term]="service.searchTerm"
+                    ></ngb-highlight>
+                  </td>
+                  <td class="status">
+                    <span
+                      class="badge text-uppercase"
+                      [ngClass]="{
+                        'badge-soft-success': data.status === 'Active',
+                        'badge-soft-danger': data.status === 'Block'
+                      }"
+                      >{{ data.status }}</span
+                    >
+                  </td>
+                  <td>
+                    <ul class="list-inline hstack gap-2 mb-0">
+                      <li
+                        class="list-inline-item edit"
+                        ngbTooltip="Edit"
+                        placement="top"
+                      >
+                        <a
+                          href="javascript:void(0);"
+                          data-bs-toggle="modal"
+                          class="text-primary d-inline-block edit-item-btn"
+                          (click)="editDataGet(data._id, content)"
+                        >
+                          <i class="ri-pencil-fill fs-16"></i>
+                        </a>
+                      </li>
+                      <li
+                        class="list-inline-item"
+                        ngbTooltip="Remove"
+                        placement="top"
+                      >
+                        <a
+                          class="text-danger d-inline-block remove-item-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteRecordModal"
+                          (click)="confirm(deleteModel, data._id)"
+                        >
+                          <i class="ri-delete-bin-5-fill fs-16"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row justify-content-md-between align-items-md-center">
+            <div class="col col-sm-5">
+              <div
+                class="dataTables_info mb-2"
+                id="tickets-table_info"
+                role="status"
+                aria-live="polite"
+              >
+                Showing
+                {{ service.startIndex }} to {{ service.endIndex }} of
+                {{ service.totalRecords }}
+                entries
+              </div>
+            </div>
+            <!-- Pagination -->
+            <div class="col col-sm-5">
+              <div class="text-sm-right float-sm-end listjs-pagination">
+                <ngb-pagination
+                  [collectionSize]="(total | async)!"
+                  [(page)]="service.page"
+                  [pageSize]="service.pageSize"
+                >
+                </ngb-pagination>
+              </div>
+            </div>
+            <!-- End Pagination -->
+          </div>
+        </div>
+
+        <!-- Customer Create Model -->
+        <ng-template #content role="document" let-modal>
+          <div class="modal-header bg-light p-3">
+            <h5 class="modal-title" id="exampleModalLabel">Add Customer</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              id="close-modal"
+              (click)="modal.dismiss('Cross click')"
+            ></button>
+          </div>
+          <form
+            (ngSubmit)="saveUser()"
+            [formGroup]="customerForm"
+            class="tablelist-form"
+            autocomplete="off"
+          >
+            <div class="modal-body">
+              <input type="hidden" name="id" value="" formControlName="ids" />
+              <div class="mb-3">
+                <label for="customername-field" class="form-label"
+                  >Customer Name</label
+                >
+                <input
+                  type="text"
+                  id="customername-field"
+                  class="form-control"
+                  placeholder="Enter Name"
+                  required
+                  formControlName="customer"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['customer'].errors
+                  }"
+                />
+                <div class="invalid-feedback">
+                  Please enter a customer name.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="email-field" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="email-field"
+                  class="form-control"
+                  placeholder="Enter Email"
+                  required
+                  formControlName="email"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['email'].errors
+                  }"
+                />
+                <div class="invalid-feedback">Please enter an email.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="phone-field" class="form-label">Phone</label>
+                <input
+                  type="text"
+                  id="phone-field"
+                  class="form-control"
+                  placeholder="Enter Phone no."
+                  mask="000-000-0000"
+                  required
+                  formControlName="phone"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['phone'].errors
+                  }"
+                />
+                <div class="invalid-feedback">Please enter a phone.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="date-field" class="form-label">Joining Date</label>
+                <input
+                  class="form-control flatpickr-input"
+                  type="text"
+                  mwlFlatpickr
+                  [altInput]="true"
+                  [convertModelValue]="true"
+                  formControlName="date"
+                  [ngClass]="{ 'is-invalid': submitted && form['date'].errors }"
+                />
+                <div class="invalid-feedback">Please select a date.</div>
+              </div>
+
+              <div>
+                <label for="status-field" class="form-label">Status</label>
+                <select
+                  class="form-control"
+                  data-trigger
+                  name="status-field"
+                  id="status-field"
+                  required
+                  formControlName="status"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['status'].errors
+                  }"
+                >
+                  <option value="">Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Block">Block</option>
+                </select>
+                <div
+                  *ngIf="submitted && form['status'].errors"
+                  class="invalid-feedback"
+                  align="left"
+                >
+                  <div *ngIf="form['status'].errors['required']">
+                    Status is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="hstack gap-2 justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-light"
+                  data-bs-dismiss="modal"
+                  (click)="modal.close('Close click')"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-success" id="add-btn">
+                  Add Customer
+                </button>
+              </div>
+            </div>
+          </form>
+        </ng-template>
+        <!--End Modal -->
+        <!--end modal -->
+        <div id="elmLoader">
+          <div class="spinner-border text-primary avatar-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->
+
+<!-- removeItemModal -->
+<ng-template #deleteModel let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        id="btn-close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-2 text-center">
+        <svg
+          width="142"
+          height="100"
+          viewBox="0 0 142 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M134.372 27.1817L128.993 25.3885L131.526 20.3222C131.782 19.7919 131.868 19.1949 131.772 18.6138C131.675 18.0326 131.4 17.4958 130.985 17.0774L124.922 11.0149C124.502 10.5939 123.96 10.3153 123.373 10.2183C122.786 10.1213 122.183 10.2108 121.649 10.4741L116.583 13.0073L114.79 7.62785C114.6 7.06711 114.241 6.57936 113.761 6.23246C113.282 5.88557 112.706 5.69679 112.114 5.69239H103.575C102.979 5.69085 102.397 5.87688 101.911 6.22419C101.426 6.5715 101.062 7.06252 100.871 7.62785L99.0783 13.0073L94.012 10.4741C93.4817 10.2173 92.8848 10.1314 92.3036 10.2283C91.7224 10.3252 91.1856 10.6 90.7673 11.0149L84.7047 17.0774C84.2837 17.498 84.0051 18.04 83.9081 18.6271C83.8111 19.2142 83.9006 19.817 84.1639 20.3506L86.6971 25.417L81.3177 27.2101C80.7569 27.3995 80.2692 27.759 79.9223 28.2385C79.5754 28.718 79.3866 29.2938 79.3822 29.8856V38.4244C79.3807 39.0211 79.5667 39.6032 79.914 40.0884C80.2613 40.5736 80.7523 40.9374 81.3177 41.1283L86.6971 42.9215L84.1639 47.9878C83.9071 48.5181 83.8212 49.115 83.9181 49.6962C84.015 50.2774 84.2898 50.8142 84.7047 51.2326L90.7673 57.2951C91.1878 57.7161 91.7298 57.9947 92.3169 58.0917C92.904 58.1887 93.5068 58.0992 94.0405 57.8359L99.1068 55.3027L100.9 60.6821C101.091 61.2475 101.455 61.7385 101.94 62.0858C102.425 62.4331 103.007 62.6191 103.604 62.6176H112.143C112.739 62.6191 113.321 62.4331 113.807 62.0858C114.292 61.7385 114.656 61.2475 114.847 60.6821L116.64 55.3027L121.706 57.8359C122.233 58.0862 122.824 58.1686 123.399 58.0718C123.975 57.9751 124.506 57.7039 124.922 57.2951L130.985 51.2326C131.406 50.812 131.684 50.27 131.781 49.6829C131.879 49.0958 131.789 48.493 131.526 47.9594L128.993 42.893L134.372 41.0999C134.933 40.9105 135.42 40.551 135.767 40.0715C136.114 39.592 136.303 39.0162 136.307 38.4244V29.8856C136.309 29.2889 136.123 28.7068 135.776 28.2216C135.428 27.7364 134.937 27.3726 134.372 27.1817ZM130.615 36.3751L127.199 37.5136C126.414 37.7683 125.693 38.1909 125.088 38.752C124.482 39.3131 124.005 39.9992 123.691 40.7628C123.377 41.5264 123.233 42.3492 123.269 43.1741C123.304 43.9991 123.519 44.8064 123.898 45.54L125.52 48.7848L122.389 51.9157L119.23 50.2079C118.5 49.8442 117.7 49.6417 116.885 49.6139C116.07 49.5861 115.259 49.7337 114.506 50.0468C113.753 50.3599 113.076 50.831 112.521 51.4285C111.966 52.0259 111.546 52.7356 111.289 53.5096L110.15 56.9251H105.625L104.486 53.5096C104.231 52.7241 103.809 52.0036 103.248 51.3978C102.687 50.792 102.001 50.3155 101.237 50.0014C100.473 49.6873 99.6506 49.5431 98.8257 49.5787C98.0007 49.6144 97.1934 49.8291 96.4598 50.2079L93.215 51.8303L90.0841 48.6994L91.7919 45.54C92.1707 44.8064 92.3854 43.9991 92.4211 43.1741C92.4567 42.3492 92.3125 41.5264 91.9984 40.7628C91.6843 39.9992 91.2078 39.3131 90.602 38.752C89.9962 38.1909 89.2756 37.7683 88.4902 37.5136L85.0747 36.3751V31.9349L88.4902 30.7964C89.2756 30.5416 89.9962 30.1191 90.602 29.558C91.2078 28.9969 91.6843 28.3108 91.9984 27.5472C92.3125 26.7836 92.4567 25.9608 92.4211 25.1358C92.3854 24.3109 92.1707 23.5036 91.7919 22.77L90.1695 19.6106L93.3004 16.4797L96.4598 18.1021C97.1934 18.4809 98.0007 18.6956 98.8257 18.7312C99.6506 18.7669 100.473 18.6227 101.237 18.3085C102.001 17.9944 102.687 17.518 103.248 16.9122C103.809 16.3064 104.231 15.5858 104.486 14.8004L105.625 11.3849H110.065L111.203 14.8004C111.458 15.5858 111.881 16.3064 112.442 16.9122C113.003 17.518 113.689 17.9944 114.453 18.3085C115.216 18.6227 116.039 18.7669 116.864 18.7312C117.689 18.6956 118.496 18.4809 119.23 18.1021L122.475 16.4797L125.605 19.6106L123.898 22.77C123.534 23.4999 123.331 24.2994 123.304 25.1144C123.276 25.9294 123.424 26.7409 123.737 27.4938C124.05 28.2468 124.521 28.9238 125.118 29.4788C125.716 30.0339 126.425 30.4541 127.199 30.711L130.615 31.8495V36.3751ZM107.845 22.77C105.593 22.77 103.392 23.4377 101.52 24.6887C99.6474 25.9397 98.1881 27.7178 97.3264 29.7981C96.4647 31.8785 96.2392 34.1676 96.6785 36.3761C97.1178 38.5846 98.2021 40.6132 99.7944 42.2054C101.387 43.7977 103.415 44.882 105.624 45.3213C107.832 45.7606 110.121 45.5351 112.202 44.6734C114.282 43.8117 116.06 42.3524 117.311 40.4802C118.562 38.6079 119.23 36.4067 119.23 34.155C119.23 31.1355 118.03 28.2397 115.895 26.1046C113.76 23.9694 110.864 22.77 107.845 22.77V22.77ZM107.845 39.8475C106.719 39.8475 105.618 39.5136 104.682 38.8881C103.746 38.2626 103.016 37.3736 102.586 36.3334C102.155 35.2932 102.042 34.1487 102.262 33.0444C102.481 31.9402 103.023 30.9259 103.82 30.1298C104.616 29.3337 105.63 28.7915 106.734 28.5718C107.838 28.3522 108.983 28.4649 110.023 28.8958C111.063 29.3266 111.952 30.0563 112.578 30.9924C113.203 31.9285 113.537 33.0291 113.537 34.155C113.537 35.6647 112.938 37.1127 111.87 38.1802C110.802 39.2478 109.355 39.8475 107.845 39.8475Z"
+            fill="#EEEEEE"
+          />
+          <path
+            d="M98.695 61.7999C83.3548 92.6027 44.4996 92.351 24.8366 88.5408C15.6691 82.8677 11.1497 73.4194 13.0572 59.2996C19.8062 14.3864 59.9031 19.8816 59.9031 19.8816L78.6941 3.53538L83.0732 30.4943C83.0732 30.4943 93.831 38.8808 97.9513 56.4758C98.3588 58.2253 98.6077 60.007 98.695 61.7999Z"
+            fill="#E01C22"
+          />
+          <path
+            d="M59.4415 95.3112C45.0505 95.6697 33.062 93.624 24.8366 88.5408C44.4996 92.351 83.3548 92.6027 98.695 61.7999C99.4701 77.9518 86.8872 94.6274 59.4415 95.3112Z"
+            fill="#B7272D"
+          />
+          <path
+            d="M65.3852 33.6403C62.2433 34.5908 55.9014 40.8546 46.8121 36.0246C37.7228 31.1946 23.3147 35.411 23.8124 53.437C24.3101 71.463 44.9962 66.6201 49.7414 63.1354C54.4867 59.6508 60.8503 62.1363 63.5624 63.9973C66.2745 65.8583 81.3814 69.3253 85.6544 57.4295C89.9274 45.5337 82.6724 28.3984 65.3852 33.6403Z"
+            fill="white"
+          />
+          <path
+            d="M31.9843 53.0832C32.5369 49.936 35.3066 47.5053 38.707 47.4206C42.1074 47.3359 45.0073 49.6253 45.7329 52.7407C45.8094 52.3051 45.8434 51.8558 45.8307 51.397C45.7265 47.624 42.504 44.6435 38.633 44.74C34.7619 44.8364 31.7083 47.9732 31.8125 51.7463C31.8251 52.205 31.8839 52.652 31.9843 53.0832Z"
+            fill="#1A1A1A"
+          />
+          <path
+            d="M66.5611 52.2218C67.1137 49.0746 69.8834 46.6439 73.2837 46.5591C76.6841 46.4744 79.5841 48.7639 80.3096 51.8792C80.3861 51.4436 80.4201 50.9943 80.4074 50.5356C80.3033 46.7625 77.0807 43.7821 73.2097 43.8785C69.3387 43.975 66.2851 47.1118 66.3892 50.8848C66.4019 51.3436 66.4607 51.7906 66.5611 52.2218Z"
+            fill="#1A1A1A"
+          />
+          <g opacity="0.05" filter="url(#filter0_f_4220_23576)">
+            <ellipse
+              cx="54.4505"
+              cy="109.576"
+              rx="42.1535"
+              ry="6.05281"
+              fill="#222222"
+            />
+          </g>
+          <path
+            d="M29.2037 34.0867C28.7768 38.5963 24.8191 41.9102 20.3639 41.4885C15.9087 41.0668 12.643 37.0692 13.0698 32.5596C13.4967 28.05 22.7271 16.5214 22.7271 16.5214C22.7271 16.5214 29.6305 29.5771 29.2037 34.0867Z"
+            fill="#A9EAFF"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M19.6581 39.6537C24.1133 40.0754 28.0711 36.7615 28.4979 32.2519C28.6372 30.7797 27.9953 28.3966 27.0674 25.8543C28.3504 29.0435 29.3759 32.2633 29.2033 34.0864C28.7765 38.596 24.8188 41.9099 20.3635 41.4882C16.8668 41.1572 14.1029 38.6235 13.2818 35.3684C14.5189 37.7047 16.8527 39.3882 19.6581 39.6537Z"
+            fill="#7ED1EB"
+          />
+          <defs>
+            <filter
+              id="filter0_f_4220_23576"
+              x="0.296997"
+              y="91.5234"
+              width="108.307"
+              height="36.1055"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                result="shape"
+              />
+              <feGaussianBlur
+                stdDeviation="6"
+                result="effect1_foregroundBlur_4220_23576"
+              />
+            </filter>
+          </defs>
+        </svg>
+        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+          <h4>You are about to delete a order ?</h4>
+          <p class="text-muted mx-4 mb-0">
+            Deleting your order will remove all of your information from our
+            database.
+          </p>
+        </div>
+      </div>
+      <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+        <button
+          class="btn btn-link link-success fw-medium text-decoration-none"
+          data-bs-dismiss="modal"
+          id="deleteRecord-close"
+          (click)="modal.close('Close click')"
+        >
+          <i class="ri-close-line me-1 align-middle"></i> Close
+        </button>
+        <button
+          type="button"
+          class="btn w-sm btn-danger"
+          id="delete-product"
+          (click)="deleteData(deleteId)"
+          (click)="modal.close('Close click')"
+        >
+          Yes, Delete It!
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
