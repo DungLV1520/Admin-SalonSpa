@@ -1,16 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { AltComponent } from "./alt.component";
 
-import { AltComponent } from './alt.component';
-
-describe('AltComponent', () => {
+describe("AltComponent", () => {
   let component: AltComponent;
   let fixture: ComponentFixture<AltComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AltComponent ]
-    })
-    .compileComponents();
+      declarations: [AltComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +17,7 @@ describe('AltComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

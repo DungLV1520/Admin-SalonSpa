@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-const TOKEN_KEY = 'auth-token';
-const USER_KEY = 'currentUser';
+const TOKEN_KEY = "auth-token";
+const USER_KEY = "currentUser";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class TokenStorageService {
-  constructor() { }
+  constructor() {}
 
   signOut(): void {
     window.sessionStorage.clear();
@@ -19,7 +19,7 @@ export class TokenStorageService {
   }
 
   public getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
   }
 
   public saveUser(user: any): void {
@@ -28,7 +28,7 @@ export class TokenStorageService {
   }
 
   public getUser(): any {
-    const user = window.localStorage.getItem(USER_KEY);    
+    const user = window.localStorage.getItem(USER_KEY);
     if (user) {
       return JSON.parse(user);
     }

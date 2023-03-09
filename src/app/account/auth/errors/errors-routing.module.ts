@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
 
 // Components
 import { BasicComponent } from "./basic/basic.component";
@@ -10,29 +10,29 @@ import { OfflineComponent } from "./offline/offline.component";
 
 const routes: Routes = [
   {
-    path:"404-basic",
-    component: BasicComponent
+    path: "404-basic",
+    component: BasicComponent,
   },
   {
     path: "404-cover",
-    component: CoverComponent
+    component: CoverComponent,
   },
   {
     path: "404-alt",
-    component: AltComponent
+    component: AltComponent,
   },
   {
     path: "page-500",
-    component: Page500Component
+    component: Page500Component,
   },
   {
     path: "offline",
-    component: OfflineComponent
-  }
+    component: OfflineComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class Error404RoutingModule { }
+export class Error404RoutingModule {}

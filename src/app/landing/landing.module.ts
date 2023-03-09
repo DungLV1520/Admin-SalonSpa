@@ -1,24 +1,22 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IndexComponent } from './index/index.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { IndexComponent } from "./index/index.component";
 
 import {
-  NgbCarouselModule, NgbTooltipModule, NgbCollapseModule
-} from '@ng-bootstrap/ng-bootstrap';
+  NgbCarouselModule,
+  NgbTooltipModule,
+  NgbCollapseModule,
+} from "@ng-bootstrap/ng-bootstrap";
 
-import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+import { ScrollToModule } from "@nicky-lenaers/ngx-scroll-to";
 
 import { LandingRoutingModule } from "./landing-routing.module";
-import { SharedModule } from '../shared/shared.module';
-import { NftComponent } from './nft/nft.component';
-import { JobComponent } from './job/job.component';
+import { SharedModule } from "../shared/shared.module";
+import { NftComponent } from "./nft/nft.component";
+import { JobComponent } from "./job/job.component";
 
 @NgModule({
-  declarations: [
-    IndexComponent,
-    NftComponent,
-    JobComponent
-  ],
+  declarations: [IndexComponent, NftComponent, JobComponent],
   imports: [
     CommonModule,
     NgbCarouselModule,
@@ -27,6 +25,6 @@ import { JobComponent } from './job/job.component';
     NgbTooltipModule,
     NgbCollapseModule,
     ScrollToModule.forRoot(),
-  ]
+  ],
 })
-export class LandingModule { }
+export class LandingModule {}
