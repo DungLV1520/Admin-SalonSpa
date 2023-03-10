@@ -7,11 +7,9 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 
 // Login Auth
-import { environment } from "../../../environments/environment";
-import { AuthenticationService } from "../../core/services/auth.service";
-import { AuthfakeauthenticationService } from "../../core/services/authfake.service";
 import { first } from "rxjs/operators";
 import { ToastService } from "./toast-service";
+import { AuthfakeauthenticationService } from "src/app/core/services/auth.service";
 
 @Component({
   selector: "app-login",
@@ -37,14 +35,13 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: UntypedFormBuilder,
-    private authenticationService: AuthenticationService,
     private router: Router,
-    private authFackservice: AuthfakeauthenticationService,
+    private authService: AuthfakeauthenticationService,
     private route: ActivatedRoute,
     public toastService: ToastService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.currentUserValue) {
+    if (this.authService.currentUserValue) {
       this.router.navigate(["/"]);
     }
   }
@@ -76,7 +73,7 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
 
     // Login Api
-    this.authenticationService
+    this.authService
       .login(this.f["email"].value, this.f["password"].value)
       .subscribe((data: any) => {
         if (data.status == "success") {
@@ -104,7 +101,7 @@ export class LoginComponent implements OnInit {
     //         this.error = error ? error : '';
     //       });
     //   } else {
-    //     this.authFackservice.login(this.f['email'].value, this.f['password'].value).pipe(first()).subscribe(data => {
+    //     this.authService.login(this.f['email'].value, this.f['password'].value).pipe(first()).subscribe(data => {
     //           this.router.navigate(['/']);
     //         },
     //         error => {

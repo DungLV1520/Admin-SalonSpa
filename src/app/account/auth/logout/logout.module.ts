@@ -10,10 +10,9 @@ import lottie from "lottie-web";
 // Component
 import { LogoutRoutingModule } from "./logout-routing.module";
 import { BasicComponent } from "./basic/basic.component";
-import { CoverComponent } from "./cover/cover.component";
 
 @NgModule({
-  declarations: [BasicComponent, CoverComponent],
+  declarations: [BasicComponent],
   imports: [
     CommonModule,
     NgbCarouselModule,
