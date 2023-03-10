@@ -19,8 +19,8 @@ const routes: Routes = [
   {
     path: "pages",
     loadChildren: () =>
-      import("./extraspages/extraspages.module").then(
-        (m) => m.ExtraspagesModule
+      import("./salonpage/salonpage.module").then(
+        (m) => m.SalonpageModule
       ),
     canActivate: [AuthGuard],
   },

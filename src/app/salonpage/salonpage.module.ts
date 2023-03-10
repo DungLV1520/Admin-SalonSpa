@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ExtrapagesRoutingModule } from "./extraspages-routing.module";
+import { ExtrapagesRoutingModule } from "./salonpage-routing.module";
 import { MaintenanceComponent } from "./maintenance/maintenance.component";
 import { ComingSoonComponent } from "./coming-soon/coming-soon.component";
 
@@ -8,4 +8,4 @@ import { ComingSoonComponent } from "./coming-soon/coming-soon.component";
   declarations: [MaintenanceComponent, ComingSoonComponent],
   imports: [CommonModule, ExtrapagesRoutingModule],
 })
-export class ExtraspagesModule {}
+export class SalonpageModule {}

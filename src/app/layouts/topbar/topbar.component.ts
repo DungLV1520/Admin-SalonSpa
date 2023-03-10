@@ -1,17 +1,12 @@
 import { Component, OnInit, EventEmitter, Output, Inject } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { EventService } from "../../core/services/event.service";
-
-//Logout
-import { AuthfakeauthenticationService } from "../../core/services/auth.service";
+import { AuthService } from "../../core/services/auth.service";
 import { TokenStorageService } from "../../core/services/token-storage.service";
 import { Router } from "@angular/router";
-
-// Language
 import { CookieService } from "ngx-cookie-service";
 import { LanguageService } from "../../core/services/language.service";
 import { TranslateService } from "@ngx-translate/core";
-
 import { CartModel } from "./topbar.model";
 import { cartData } from "./data";
 
@@ -21,14 +16,12 @@ import { cartData } from "./data";
   styleUrls: ["./topbar.component.scss"],
 })
 export class TopbarComponent implements OnInit {
+  @Output() mobileMenuButtonClicked = new EventEmitter();
   element: any;
   mode: string | undefined;
-  @Output() mobileMenuButtonClicked = new EventEmitter();
-
   cartData!: CartModel[];
   total = 0;
   cart_length: any = 0;
-
   flagvalue: any;
   valueset: any;
   countryName: any;
@@ -41,7 +34,7 @@ export class TopbarComponent implements OnInit {
     public languageService: LanguageService,
     public _cookiesService: CookieService,
     public translate: TranslateService,
-    private authService: AuthfakeauthenticationService,
+    private authService: AuthService,
     private router: Router,
     private TokenStorageService: TokenStorageService
   ) {}
@@ -71,17 +64,11 @@ export class TopbarComponent implements OnInit {
     });
   }
 
-  /**
-   * Toggle the menu bar when having mobile screen
-   */
   toggleMobileMenu(event: any) {
     event.preventDefault();
     this.mobileMenuButtonClicked.emit();
   }
 
-  /**
-   * Fullscreen method
-   */
   fullscreen() {
     document.body.classList.toggle("fullscreen-enable");
     if (
@@ -139,9 +126,6 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-  /***
-   * Language Listing
-   */
   listLang = [
     { text: "English", flag: "assets/images/flags/us.svg", lang: "en" },
     { text: "Española", flag: "assets/images/flags/spain.svg", lang: "es" },
@@ -153,9 +137,6 @@ export class TopbarComponent implements OnInit {
     { text: "Arabic", flag: "assets/images/flags/ae.svg", lang: "ar" },
   ];
 
-  /***
-   * Language Value Set
-   */
   setLanguage(text: string, lang: string, flag: string) {
     this.countryName = text;
     this.flagvalue = flag;
@@ -165,16 +146,8 @@ export class TopbarComponent implements OnInit {
 
   oncheckboxchange(evnt: any) {}
 
-  /**
-   * Logout the user
-   */
   logout() {
     this.authService.logout();
-    // if (environment.defaultauth === 'firebase') {
-    //   this.authService.logout();
-    // } else {
-    //   this.authService.logout();
-    // }
     this.router.navigate(["/auth/login"]);
   }
 
@@ -191,7 +164,6 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-  // Delete Item
   deleteItem(event: any, id: any) {
     var price = event.target
       .closest(".dropdown-item")

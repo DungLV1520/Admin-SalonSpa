@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { NgbToastModule } from "@ng-bootstrap/ng-bootstrap";
 import { defineElement } from "lord-icon-element";
-import { ToastsContainer } from "./auth/login/toasts-container.component";
+import { ToastsContainer } from "../shared/toasts-container.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { RegisterComponent } from "./auth/register/register.component";
 import { LoginComponent } from "./auth/login/login.component";

@@ -1,19 +1,20 @@
 export const GlobalComponent = {
-    // Api Calling
-    API_URL : 'https://api-node.themesbrand.website/',
-    headerToken : {'Authorization': `Bearer ${localStorage.getItem('token')}`},
+  // Api Calling
+  API_URL: "https://api-node.themesbrand.website/",
+  API_URL_LOCAL: "http://localhost:3000/api/",
+  headerToken: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 
-    // Auth Api
-    AUTH_API:"https://api-node.themesbrand.website/auth/",
-    
-    // Products Api
-    product:'apps/product',
-    productDelete:'apps/product/',
+  // Auth Api
+  AUTH_API: "https://api-node.themesbrand.website/auth/",
 
-    // Orders Api
-    order:'apps/order',
-    orderId:'apps/order/',
+  // Products Api
+  product: "apps/product",
+  productDelete: "apps/product/",
 
-    // Customers Api
-    customer:'apps/customer',
-}
+  // Orders Api
+  order: "apps/order",
+  orderId: "apps/order/",
+
+  // Customers Api
+  customer: "apps/customer",
+};

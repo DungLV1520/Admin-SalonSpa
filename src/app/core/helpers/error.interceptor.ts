@@ -7,11 +7,11 @@ import {
 } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { AuthfakeauthenticationService } from "../services/auth.service";
+import { AuthService } from "../services/auth.service";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthfakeauthenticationService) {}
+  constructor(private authenticationService: AuthService) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -20,7 +20,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         if (err.status === 401) {
-          // auto logout if 401 response returned from api
           this.authenticationService.logout();
           // location.reload();
         }

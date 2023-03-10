@@ -10,27 +10,18 @@ import {
   templateUrl: "./basic.component.html",
   styleUrls: ["./basic.component.scss"],
 })
-
-/**
- * Basic Component
- */
 export class BasicComponent implements OnInit {
-  // Login Form
   passresetForm!: UntypedFormGroup;
   submitted = false;
   passwordField!: boolean;
   confirmField!: boolean;
   error = "";
   returnUrl!: string;
-  // set the current year
   year: number = new Date().getFullYear();
 
   constructor(private formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {
-    /**
-     * Form Validatyion
-     */
     this.passresetForm = this.formBuilder.group({
       password: ["", [Validators.required]],
       cpassword: ["", [Validators.required]],
@@ -98,33 +89,22 @@ export class BasicComponent implements OnInit {
     };
   }
 
-  // convenience getter for easy access to form fields
   get f() {
     return this.passresetForm.controls;
   }
 
-  /**
-   * Form submit
-   */
   onSubmit() {
     this.submitted = true;
 
-    // stop here if form is invalid
     if (this.passresetForm.invalid) {
       return;
     }
   }
 
-  /**
-   * Password Hide/Show
-   */
   togglepasswordField() {
     this.passwordField = !this.passwordField;
   }
 
-  /**
-   * Password Hide/Show
-   */
   toggleconfirmField() {
     this.confirmField = !this.confirmField;
   }

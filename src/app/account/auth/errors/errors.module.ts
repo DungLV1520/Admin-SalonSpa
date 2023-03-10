@@ -3,7 +3,6 @@ import { CommonModule } from "@angular/common";
 import { defineElement } from "lord-icon-element";
 import lottie from "lottie-web";
 
-// Component
 import { Error404RoutingModule } from "./errors-routing.module";
 import { BasicComponent } from "./basic/basic.component";
 import { Page500Component } from "./page500/page500.component";

@@ -1,9 +1,7 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { NgbCarouselModule } from "@ng-bootstrap/ng-bootstrap";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-
-// Component
 import { PassCreateRoutingModule } from "./pass-create-routing.module";
 import { BasicComponent } from "./basic/basic.component";
 
@@ -16,5 +14,6 @@ import { BasicComponent } from "./basic/basic.component";
     FormsModule,
     PassCreateRoutingModule,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PassCreateModule {}

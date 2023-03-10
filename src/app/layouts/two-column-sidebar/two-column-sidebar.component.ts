@@ -1,35 +1,39 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-
-import { MENU } from './menu';
-import { MenuItem } from './menu.model';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
+import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { MENU } from "./menu";
+import { MenuItem } from "./menu.model";
 
 @Component({
-  selector: 'app-two-column-sidebar',
-  templateUrl: './two-column-sidebar.component.html',
-  styleUrls: ['./two-column-sidebar.component.scss']
+  selector: "app-two-column-sidebar",
+  templateUrl: "./two-column-sidebar.component.html",
+  styleUrls: ["./two-column-sidebar.component.scss"],
 })
 export class TwoColumnSidebarComponent implements OnInit {
-
   menu: any;
   toggle: any = true;
   menuItems: MenuItem[] = [];
-  @ViewChild('sideMenu') sideMenu!: ElementRef;
+  @ViewChild("sideMenu") sideMenu!: ElementRef;
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
   constructor(private router: Router, public translate: TranslateService) {
-    translate.setDefaultLang('en');
+    translate.setDefaultLang("en");
   }
 
   ngOnInit(): void {
-    // Menu Items
-    this.menuItems = MENU;   
+    this.menuItems = MENU;
   }
 
   /***
-  * Activate drop down set
-  */
+   * Activate drop down set
+   */
   ngAfterViewInit() {
     setTimeout(() => {
       this.initActiveMenu();
@@ -37,42 +41,48 @@ export class TwoColumnSidebarComponent implements OnInit {
   }
 
   toggleSubItem(event: any) {
-    let isCurrentMenuId = event.target.closest('a.nav-link');
+    let isCurrentMenuId = event.target.closest("a.nav-link");
     let isMenu = isCurrentMenuId.nextElementSibling as any;
-    let dropDowns = Array.from(document.querySelectorAll('.menu-dropdown .show'));
+    let dropDowns = Array.from(
+      document.querySelectorAll(".menu-dropdown .show")
+    );
     dropDowns.forEach((node: any) => {
-      node.classList.remove('show');
+      node.classList.remove("show");
     });
 
-    let subDropDowns = Array.from(document.querySelectorAll('.menu-dropdown .nav-link'));
+    let subDropDowns = Array.from(
+      document.querySelectorAll(".menu-dropdown .nav-link")
+    );
     subDropDowns.forEach((submenu: any) => {
-      submenu.setAttribute('aria-expanded',"false");
+      submenu.setAttribute("aria-expanded", "false");
     });
-    
-    if (event.target && event.target.nextElementSibling){
+
+    if (event.target && event.target.nextElementSibling) {
       isCurrentMenuId.setAttribute("aria-expanded", "true");
       event.target.nextElementSibling.classList.toggle("show");
     }
-  };
+  }
 
   toggleExtraSubItem(event: any) {
-    let isCurrentMenuId = event.target.closest('a.nav-link');
+    let isCurrentMenuId = event.target.closest("a.nav-link");
     let isMenu = isCurrentMenuId.nextElementSibling as any;
-    let dropDowns = Array.from(document.querySelectorAll('.extra-sub-menu'));
+    let dropDowns = Array.from(document.querySelectorAll(".extra-sub-menu"));
     dropDowns.forEach((node: any) => {
-      node.classList.remove('show');
+      node.classList.remove("show");
     });
 
-    let subDropDowns = Array.from(document.querySelectorAll('.menu-dropdown .nav-link'));
+    let subDropDowns = Array.from(
+      document.querySelectorAll(".menu-dropdown .nav-link")
+    );
     subDropDowns.forEach((submenu: any) => {
-      submenu.setAttribute('aria-expanded',"false");
+      submenu.setAttribute("aria-expanded", "false");
     });
-    
-    if (event.target && event.target.nextElementSibling){
+
+    if (event.target && event.target.nextElementSibling) {
       isCurrentMenuId.setAttribute("aria-expanded", "true");
       event.target.nextElementSibling.classList.toggle("show");
     }
-  };
+  }
 
   updateActive(event: any) {
     const ul = document.getElementById("navbar-nav");
@@ -84,46 +94,51 @@ export class TwoColumnSidebarComponent implements OnInit {
   }
 
   // Click wise Parent active class add
-  toggleParentItem(event: any) {    
-    let isCurrentMenuId = event.target.getAttribute('subitems');
+  toggleParentItem(event: any) {
+    let isCurrentMenuId = event.target.getAttribute("subitems");
     let isMenu = document.getElementById(isCurrentMenuId) as any;
-    let dropDowns = Array.from(document.querySelectorAll('#navbar-nav .show'));
+    let dropDowns = Array.from(document.querySelectorAll("#navbar-nav .show"));
     dropDowns.forEach((node: any) => {
-      node.classList.remove('show');
+      node.classList.remove("show");
     });
-    (isMenu) ? isMenu.classList.add('show') : null;
+    isMenu ? isMenu.classList.add("show") : null;
 
     const ul = document.getElementById("two-column-menu");
     if (ul) {
       const iconItems = Array.from(ul.getElementsByTagName("a"));
-      let activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
+      let activeIconItems = iconItems.filter((x: any) =>
+        x.classList.contains("active")
+      );
       activeIconItems.forEach((item: any) => {
         item.classList.remove("active");
       });
     }
     event.target.classList.add("active");
-    document.body.classList.add('twocolumn-panel')
+    document.body.classList.add("twocolumn-panel");
   }
 
-  toggleItem(event: any) { // show navbar-nav menu on click of icon sidebar menu    
-    let isCurrentMenuId = event.target.getAttribute('subitems');
+  toggleItem(event: any) {
+    // show navbar-nav menu on click of icon sidebar menu
+    let isCurrentMenuId = event.target.getAttribute("subitems");
     let isMenu = document.getElementById(isCurrentMenuId) as any;
-    let dropDowns = Array.from(document.querySelectorAll('#navbar-nav .show'));
+    let dropDowns = Array.from(document.querySelectorAll("#navbar-nav .show"));
     dropDowns.forEach((node: any) => {
-      node.classList.remove('show');
+      node.classList.remove("show");
     });
-    (isMenu) ? isMenu.classList.add('show') : null;
+    isMenu ? isMenu.classList.add("show") : null;
 
     const ul = document.getElementById("two-column-menu");
     if (ul) {
       const iconItems = Array.from(ul.getElementsByTagName("a"));
-      let activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
+      let activeIconItems = iconItems.filter((x: any) =>
+        x.classList.contains("active")
+      );
       activeIconItems.forEach((item: any) => {
         item.classList.remove("active");
       });
     }
     event.target.classList.add("active");
-    document.body.classList.remove('twocolumn-panel')
+    document.body.classList.remove("twocolumn-panel");
   }
 
   // remove active items of two-column-menu
@@ -146,24 +161,39 @@ export class TwoColumnSidebarComponent implements OnInit {
   }
 
   activateIconSidebarActive(id: any) {
-    var menu = document.querySelector("#two-column-menu .simplebar-content-wrapper a[subitems='" + id + "'].nav-icon");
+    var menu = document.querySelector(
+      "#two-column-menu .simplebar-content-wrapper a[subitems='" +
+        id +
+        "'].nav-icon"
+    );
     if (menu !== null) {
       menu.classList.add("active");
     }
   }
 
-  activateParentDropdown(item: any) { // navbar-nav menu add active
+  activateParentDropdown(item: any) {
+    // navbar-nav menu add active
     item.classList.add("active");
     let parentCollapseDiv = item.closest(".collapse.menu-dropdown");
     if (parentCollapseDiv) {
       // to set aria expand true remaining
       parentCollapseDiv.classList.add("show");
       parentCollapseDiv.parentElement.children[0].classList.add("active");
-      parentCollapseDiv.parentElement.children[0].setAttribute("aria-expanded", "true");
+      parentCollapseDiv.parentElement.children[0].setAttribute(
+        "aria-expanded",
+        "true"
+      );
       if (parentCollapseDiv.parentElement.closest(".collapse.menu-dropdown")) {
-        parentCollapseDiv.parentElement.closest(".collapse").classList.add("show");
-        if (parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling)
-          parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling.classList.add("active");
+        parentCollapseDiv.parentElement
+          .closest(".collapse")
+          .classList.add("show");
+        if (
+          parentCollapseDiv.parentElement.closest(".collapse")
+            .previousElementSibling
+        )
+          parentCollapseDiv.parentElement
+            .closest(".collapse")
+            .previousElementSibling.classList.add("active");
       }
       this.activateIconSidebarActive(parentCollapseDiv.getAttribute("id"));
       return false;
@@ -173,13 +203,15 @@ export class TwoColumnSidebarComponent implements OnInit {
 
   initActiveMenu() {
     const pathName = window.location.pathname;
-    
+
     // Active Main Single Menu
-    const mainItems = Array.from(document.querySelectorAll(".twocolumn-iconview li a"));
+    const mainItems = Array.from(
+      document.querySelectorAll(".twocolumn-iconview li a")
+    );
     let matchingMainMenuItem = mainItems.find((x: any) => {
       return x.pathname === pathName;
     });
-    if (matchingMainMenuItem) {        
+    if (matchingMainMenuItem) {
       this.activateParentDropdown(matchingMainMenuItem);
     }
 
@@ -187,19 +219,21 @@ export class TwoColumnSidebarComponent implements OnInit {
     const ul = document.getElementById("navbar-nav");
     if (ul) {
       const items = Array.from(ul.querySelectorAll("a.nav-link"));
-      let activeItems = items.filter((x: any) => x.classList.contains("active"));
+      let activeItems = items.filter((x: any) =>
+        x.classList.contains("active")
+      );
       this.removeActivation(activeItems);
 
       let matchingMenuItem = items.find((x: any) => {
         return x.pathname === pathName;
       });
 
-      if (matchingMenuItem) {        
+      if (matchingMenuItem) {
         this.activateParentDropdown(matchingMenuItem);
       } else {
         var id = pathName.replace("/", "");
-        if (id) document.body.classList.add('twocolumn-panel');        
-        this.activateIconSidebarActive(id)
+        if (id) document.body.classList.add("twocolumn-panel");
+        this.activateIconSidebarActive(id);
       }
     }
   }
@@ -211,5 +245,4 @@ export class TwoColumnSidebarComponent implements OnInit {
   hasItems(item: MenuItem) {
     return item.subItems !== undefined ? item.subItems.length > 0 : false;
   }
-
 }

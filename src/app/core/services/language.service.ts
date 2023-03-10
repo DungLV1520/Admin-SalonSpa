@@ -11,9 +11,7 @@ export class LanguageService {
     private cookieService: CookieService
   ) {
     let browserLang: any;
-    /***
-     * cookie Language Get
-     */
+
     this.translate.addLangs(this.languages);
     if (this.cookieService.check("lang")) {
       browserLang = this.cookieService.get("lang");
@@ -23,9 +21,6 @@ export class LanguageService {
     translate.use(browserLang.match(/en|es|de|it|ru/) ? browserLang : "en");
   }
 
-  /***
-   * Cookie Language set
-   */
   public setLanguage(lang: any) {
     this.translate.use(lang);
     this.cookieService.set("lang", lang);

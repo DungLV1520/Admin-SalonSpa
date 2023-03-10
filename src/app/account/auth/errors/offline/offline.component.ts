@@ -5,10 +5,6 @@ import { Component, OnInit } from "@angular/core";
   templateUrl: "./offline.component.html",
   styleUrls: ["./offline.component.scss"],
 })
-
-/**
- * Offline Component
- */
 export class OfflineComponent implements OnInit {
   constructor() {}
 

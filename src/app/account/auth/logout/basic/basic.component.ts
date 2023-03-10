@@ -5,12 +5,7 @@ import { Component, OnInit } from "@angular/core";
   templateUrl: "./basic.component.html",
   styleUrls: ["./basic.component.scss"],
 })
-
-/**
- * Logout Basic Component
- */
 export class BasicComponent implements OnInit {
-  // set the current year
   year: number = new Date().getFullYear();
 
   constructor() {}

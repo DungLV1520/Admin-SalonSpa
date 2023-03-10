@@ -3,9 +3,10 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { User } from "../models/auth.models";
+import { GlobalComponent } from "src/app/global-component";
 
 @Injectable({ providedIn: "root" })
-export class AuthfakeauthenticationService {
+export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
@@ -21,16 +22,21 @@ export class AuthfakeauthenticationService {
   }
 
   login(email: string, password: string) {
-    return this.http.post<any>(`/users/authenticate`, { email, password }).pipe(
-      map((user) => {
-        if (user && user.token) {
-          localStorage.setItem("toast", "true");
-          localStorage.setItem("currentUser", JSON.stringify(user));
-          this.currentUserSubject.next(user);
-        }
-        return user;
+    return this.http
+      .post<any>(GlobalComponent.API_URL_LOCAL + `users/login`, {
+        email,
+        password,
       })
-    );
+      .pipe(
+        map((user) => {
+          if (user && user.jwt) {
+            localStorage.setItem("toast", "true");
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            this.currentUserSubject.next(user);
+          }
+          return user;
+        })
+      );
   }
 
   logout() {
