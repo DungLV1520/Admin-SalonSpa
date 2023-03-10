@@ -1,57 +1,26 @@
 import { Injectable } from "@angular/core";
-import { getFirebaseBackend } from "../../authUtils";
-import { User } from "../models/auth.models";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { map } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
-import { GlobalComponent } from "../../global-component";
-
-const AUTH_API = GlobalComponent.AUTH_API;
-
-const httpOptions = {
-  headers: new HttpHeaders({ "Content-Type": "application/json" }),
-};
+import { map } from "rxjs/operators";
+import { User } from "../models/auth.models";
 
 @Injectable({ providedIn: "root" })
-
-/**
- * Auth-service Component
- */
-export class AuthenticationService {
-  user!: User;
-  currentUserValue: any;
-
+export class AuthfakeauthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
-  // public currentUser: Observable<User>;
+  public currentUser: Observable<User>;
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem("currentUser")!)
     );
-    // this.currentUser = this.currentUserSubject.asObservable();
+    this.currentUser = this.currentUserSubject.asObservable();
   }
 
   /**
-   * Performs the register
-   * @param email email
-   * @param password password
+   * current user
    */
-  register(email: string, first_name: string, password: string) {
-    // return getFirebaseBackend()!.registerUser(email, password).then((response: any) => {
-    //     const user = response;
-    //     return user;
-    // });
-
-    // Register Api
-    return this.http.post(
-      AUTH_API + "signup",
-      {
-        email,
-        first_name,
-        password,
-      },
-      httpOptions
-    );
+  public get currentUserValue(): User {
+    return this.currentUserSubject.value;
   }
 
   /**
@@ -60,49 +29,28 @@ export class AuthenticationService {
    * @param password password of user
    */
   login(email: string, password: string) {
-    // return getFirebaseBackend()!.loginUser(email, password).then((response: any) => {
-    //     const user = response;
-    //     return user;
-    // });
-
-    return this.http.post(
-      AUTH_API + "signin",
-      {
-        email,
-        password,
-      },
-      httpOptions
+    return this.http.post<any>(`/users/authenticate`, { email, password }).pipe(
+      map((user) => {
+        // login successful if there's a jwt token in the response
+        if (user && user.token) {
+          // store user details and jwt token in local storage to keep user logged in between page refreshes
+          localStorage.setItem("toast", "true");
+          localStorage.setItem("currentUser", JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        }
+        return user;
+      })
     );
-  }
-
-  /**
-   * Returns the current user
-   */
-  public currentUser(): any {
-    return getFirebaseBackend()!.getAuthenticatedUser();
   }
 
   /**
    * Logout the user
    */
   logout() {
-    // logout the user
-    // return getFirebaseBackend()!.logout();
+    // remove user from local storage to log user out
     localStorage.removeItem("currentUser");
-    localStorage.removeItem("token");
     this.currentUserSubject.next(null!);
   }
 
-  /**
-   * Reset password
-   * @param email email
-   */
-  resetPassword(email: string) {
-    return getFirebaseBackend()!
-      .forgetPassword(email)
-      .then((response: any) => {
-        const message = response.data;
-        return message;
-      });
-  }
+  register() {}
 }
